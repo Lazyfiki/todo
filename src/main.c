@@ -1,3 +1,5 @@
+// TODO: clean up and a better way to store the tasks
+// also fix the Makefile and add install command
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
