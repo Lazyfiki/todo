@@ -30,6 +30,12 @@ void helpCommands() {
 
 void listTasks(tasks* t) {
     node* curr = t->head;
+
+    if (curr == NULL) {
+        fprintf(stderr, "fatal: no tasks found\n");
+        exit(1);
+    }
+
     for (int i = 0; i < t->length; ++i) {
         printf("%s\n", curr->value);
         curr = curr->next;
@@ -37,6 +43,7 @@ void listTasks(tasks* t) {
 }
 
 void addTask(tasks* t, char* task) {
+    // TODO: save tasks to file
     node* newTask = (node*)malloc(sizeof(node));
     newTask->value = task;
     t->length++;
@@ -78,7 +85,6 @@ int main(int argc, char* argv[]) {
     }
 
     if (!strcmp(argv[1], "ls")) {
-        printf("%s\n", TaskList.head->value);
         listTasks(&TaskList);
     } else if (!strcmp(argv[1], "rm")) {
         printf("%s command!\n", argv[1]);
