@@ -55,6 +55,7 @@ void saveTask(char* task) {
 }
 
 void loadTasks(tasks* t, char* input) {
+    int idx = 0;
     FILE* file;
     char content[256];
 
@@ -64,11 +65,41 @@ void loadTasks(tasks* t, char* input) {
         exit(1);
     }
     while (fgets(content, 256, file) != NULL) {
-        printf("%s", content);
+        printf("[%d] - %s", idx, content);
         addTask(t, content);
+        idx++;
     }
 
     fclose(file);
+}
+
+node* getNode(tasks* t, int idx) {
+    node* curr = t->head;
+    if (idx > t->length) {
+        fprintf(stderr, "fatal: task doesn't exist\n");
+        exit(1);
+    }
+
+    for (int i = 0; i < idx; ++i) {
+        curr = curr->next;
+    }
+
+    return curr;
+}
+
+void deleteTask(tasks* t, int idx) {
+    if (idx == 0) {
+        t->head = t->head->next;
+        return;
+    }
+
+    if (idx == t->length) {
+        t->tail = NULL;
+        return;
+    }
+
+    node* curr = getNode(t, idx-1);
+    curr->next = curr->next->next;
 }
 
 int main(int argc, char* argv[]) {
@@ -76,7 +107,6 @@ int main(int argc, char* argv[]) {
     TaskList.head = NULL;
     TaskList.tail = NULL;
     TaskList.length = 0;
-
 
     int opt;
     opterr = 0;
@@ -97,11 +127,11 @@ int main(int argc, char* argv[]) {
         helpCommands();
         return 1;
     }
-
+    printf("%d\n", TaskList.length);
     if (!strcmp(argv[1], "ls")) {
         loadTasks(&TaskList, "db.txt");
     } else if (!strcmp(argv[1], "rm")) {
-        printf("%s command!\n", argv[1]);
+        deleteTask(&TaskList, atoi(argv[2]));
     } else if (!strcmp(argv[1], "add")) {
         addTask(&TaskList, argv[2]);
         saveTask(argv[2]);

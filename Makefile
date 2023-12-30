@@ -11,8 +11,8 @@ all: $(OUT_DIR)/$(OUT_NAME)
 $(OUT_DIR)/$(OUT_NAME): $(SRC_FILE)
 	$(CC) $(CFLAGS) $^ -o $@
 
-run: $(OUT_DIR)/$(OUT_NAME)
-	./$(OUT_DIR)/$(OUT_NAME)
+install:
+	cp $(OUT_DIR)/$(OUT_NAME) ~/.local/bin
 
 clean:
 	rm -f $(OUT_DIR)/$(OUT_NAME)
