@@ -1,5 +1,7 @@
-// TODO: clean up and a better way to store the tasks
-// also fix the Makefile and add install command
+// TODO: refarctor code
+// TODO: save tasks in a better location
+// TODO: allow for file input and output
+// TODO: setup unit testing
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -131,6 +133,8 @@ int main(int argc, char* argv[]) {
     if (!strcmp(argv[1], "ls")) {
         loadTasks(&TaskList, "db.txt");
     } else if (!strcmp(argv[1], "rm")) {
+        // TODO: fix this mess
+        loadTasks(&TaskList, "db.txt");
         deleteTask(&TaskList, atoi(argv[2]));
     } else if (!strcmp(argv[1], "add")) {
         addTask(&TaskList, argv[2]);
