@@ -37,13 +37,12 @@ void listTasks(tasks* t) {
     }
 
     for (int i = 0; i < t->length; ++i) {
-        printf("%s\n", curr->value);
+        printf("%s", curr->value);
         curr = curr->next;
     }
 }
 
 void addTask(tasks* t, char* task) {
-    // TODO: save tasks to file
     node* newTask = (node*)malloc(sizeof(node));
     newTask->value = task;
     t->length++;
@@ -58,11 +57,37 @@ void addTask(tasks* t, char* task) {
     return;
 }
 
+void saveTask(char* task) {
+    FILE* file;
+    file = fopen("db.txt", "a");
+
+    fprintf(file, "%s\n", task);
+
+    fclose(file);
+}
+
+void loadTasks(tasks* t, char* input) {
+    FILE* file;
+    char content[50];
+
+    file = fopen(input, "r");
+    if (file == NULL) {
+        fprintf(stderr, "fatal: file not found\n");
+        exit(1);
+    }
+    while (fgets(content, 50, file) != NULL) {
+        addTask(t, content);
+    }
+
+    fclose(file);
+}
+
 int main(int argc, char* argv[]) {
     tasks TaskList;
     TaskList.head = NULL;
     TaskList.tail = NULL;
     TaskList.length = 0;
+
 
     int opt;
     opterr = 0;
@@ -85,11 +110,13 @@ int main(int argc, char* argv[]) {
     }
 
     if (!strcmp(argv[1], "ls")) {
+        loadTasks(&TaskList, "db.txt");
         listTasks(&TaskList);
     } else if (!strcmp(argv[1], "rm")) {
         printf("%s command!\n", argv[1]);
     } else if (!strcmp(argv[1], "add")) {
         addTask(&TaskList, argv[2]);
+        saveTask(argv[2]);
     } else {
         helpUsage(argv[0]);
         helpCommands();
